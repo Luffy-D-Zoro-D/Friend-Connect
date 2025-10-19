@@ -8,7 +8,6 @@ import {
   setCurrentUserSession,
   clearCurrentUserSession,
 } from './services/apiService';
-import { getStatusSuggestion } from './services/geminiService';
 import FriendCard from './components/FriendCard';
 import StatusUpdateForm from './components/StatusUpdateForm';
 import StatusHistoryModal from './components/StatusHistoryModal';
@@ -127,7 +126,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [historyModalFriend, setHistoryModalFriend] = useState<Friend | null>(null);
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -185,23 +183,6 @@ export default function App() {
     }
   };
 
-  const handleGetSuggestion = async (): Promise<string> => {
-    if (!friendsData || !currentUserId) return '';
-    setIsGenerating(true);
-    try {
-        const currentUser = friendsData[currentUserId];
-        const recentStatuses = currentUser.statusHistory.slice(0, 3).map(s => s.text);
-        const suggestion = await getStatusSuggestion(recentStatuses);
-        return suggestion;
-    } catch (err) {
-        setError('Could not get a suggestion.');
-        console.error(err);
-        return '';
-    } finally {
-        setIsGenerating(false);
-    }
-  };
-
   if (!currentUserId) {
     return <Login onLogin={handleLogin} friendsData={friendsData} />;
   }
@@ -248,10 +229,7 @@ export default function App() {
             </div>
 
             <StatusUpdateForm
-                currentStatus={me.currentStatus.text}
                 onSubmit={handleUpdateStatus}
-                onGetSuggestion={handleGetSuggestion}
-                isGenerating={isGenerating}
               />
           </main>
         )}

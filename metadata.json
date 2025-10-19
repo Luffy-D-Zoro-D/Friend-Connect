@@ -1,5 +1,5 @@
 {
   "name": "Friend Connect Status",
-  "description": "A web app for friends to stay connected by sharing their live status and activity history. Uses Gemini to suggest creative status updates.",
+  "description": "A web app for friends to stay connected by sharing their live status and activity history.",
   "requestFramePermissions": []
 }
